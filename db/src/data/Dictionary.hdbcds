@@ -1,0 +1,63 @@
+context Dictionary {
+    type LanguageKey : String(2);
+    type WordType : String(50);
+    
+    const SPANISH_LANG : LanguageKey = 'es';
+
+    /* Holds a dictionary word */
+    entity DictionaryWord {
+        key WORD      : WordType;
+        key LANG      : LanguageKey;
+            VERB      : Boolean default false;
+            IRREGULAR : Boolean default false;
+    }
+    technical configuration {
+        column store;
+        fulltext index WORDFTI on (WORD)
+            fuzzy search index off
+            text analysis off;
+    };
+    
+    /* Holds a dictionary word's meaning */
+    entity WordDefinition {
+    	key WORD : WordType;
+    	key LANG : LanguageKey;
+    	key DEFINITION_LANG : LanguageKey;
+    	    DEFINITION : WordType;
+    } technical configuration {
+    	column store;
+    	fulltext index DEFINITIONFTI on (DEFINITION)
+    		fuzzy search index off
+    		text analysis off;
+    }
+
+    /* Languages in the system */
+    entity Language {
+        key LANG : LanguageKey;
+    }
+    technical configuration {
+        column store;
+    };
+
+    /* Language Specific Descriptions for entity Language */
+    entity LanguageText {
+        key LANG   : LanguageKey;
+        key TARGET_LANG : LanguageKey;
+            TEXT : String(30);
+    }
+    technical configuration {
+        column store;
+    };
+    
+    view LanguageWords with parameters SOURCELANG : LanguageKey,
+                                       TARGETLANG : LanguageKey
+    	as select from DictionaryWord
+    		left outer join WordDefinition
+    			on DictionaryWord.WORD = WordDefinition.WORD 
+    			and DictionaryWord.LANG = WordDefinition.LANG
+    	{
+    		DictionaryWord.WORD,
+    		WordDefinition.DEFINITION
+    	} where DictionaryWord.LANG = $parameters.SOURCELANG
+    	    and WordDefinition.DEFINITION_LANG = $parameters.TARGETLANG;
+};

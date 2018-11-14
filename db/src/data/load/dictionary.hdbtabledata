@@ -1,0 +1,30 @@
+{
+	"format_version": 1,
+	"imports": [{
+		"column_mappings": {
+			"LANG": 1
+		},
+		"source_data": {
+			"data_type": "CSV",
+			"dialect": "HANA",
+			"file_name": "language.csv",
+			"has_header": false,
+			"delimiter" : ","
+		},
+		"target_table": "Dictionary.Language"
+	}, {
+		"column_mappings": {
+			"LANG": 1,
+			"TARGET_LANG" : 2,
+			"TEXT" : 3
+		},
+		"source_data": {
+			"data_type": "CSV",
+			"dialect": "HANA",
+			"file_name": "language_text.csv",
+			"has_header": false,
+			"delimiter" : ","
+		},
+		"target_table": "Dictionary.LanguageText"
+	}]
+}
