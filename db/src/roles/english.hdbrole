@@ -1,0 +1,20 @@
+{
+	"role" : {
+		"name" : "english",
+		"schema_privileges" : [{
+			"privileges" : [
+				"SELECT METADATA",
+				"SELECT CDS METADATA",
+				"SELECT",
+				"INSERT",
+				"EXECUTE",
+				"DELETE",
+				"UPDATE",
+				"CREATE TEMPORARY TABLE"
+			]
+		}],
+		"schema_analytic_privileges": [{
+			"privileges" : ["EN_LANGUAGE_VIEW_PRIVILEGE"]	
+		}]
+	}
+}
